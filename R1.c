@@ -163,7 +163,7 @@ void selection(int *a, int n){
     }
 }
 
-void shell(int *a, int n){
+void shell(int *a, int s){
     int gap, i;
     for (gap = s / 2; gap > 0; gap /= 2) {
         for ( i = gap; i < s; i += 1) {
