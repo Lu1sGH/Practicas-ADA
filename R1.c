@@ -106,8 +106,7 @@ void rFile(int **a, int *n){
     char c;
 
     while((c=fgetc(file)) != EOF){
-		if(c == 10)
-            (*n)++;
+	if(c == 10) (*n)++;
     }
     (*n)++;
     rewind(file);
@@ -165,7 +164,17 @@ void selection(int *a, int n){
 }
 
 void shell(int *a, int n){
-	return;
+    int gap, i;
+    for (gap = s / 2; gap > 0; gap /= 2) {
+        for ( i = gap; i < s; i += 1) {
+            int temp = a[i];
+            int j;
+            for (j = i; j >= gap && a[j - gap] > temp; j -= gap) {
+                a[j] = a[j - gap];
+            }
+            a[j] = temp;
+        }
+    }
 }
 
 void tree(int *a, int n){
