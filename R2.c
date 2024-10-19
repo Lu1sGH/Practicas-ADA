@@ -1,10 +1,10 @@
 /*
-T�tulo: Algoritmos de ordenamiento
-Descripci�n: Programa que recibe un archivo con n�meros, a los que se les aplica
+Título: Algoritmos de ordenamiento
+Descripción: Programa que recibe un archivo con números, a los que se les aplica
 un algoritmo de ordenamiento.
 Fecha: 30/09/2024
-U. modificaci�n: 14/10/2024
-Versi�n: 2
+U. modificación: 14/10/2024
+Versión: 2
 Autor: Araujo, K. Martinez, A. & Zarate, L.
 */
 
@@ -13,6 +13,7 @@ Autor: Araujo, K. Martinez, A. & Zarate, L.
 #include <time.h>
 #include <sys/time.h>
 
+//Declaracion de funciones que se utilizaran.
 void impA(int *, int);
 void rFile(int **, int *);
 
@@ -62,11 +63,13 @@ int main(){
 	struct timeval i_real, f_real;
 	double t_cpu, t_real;
 
+	/*Declaracion del largo del arreglo, se lee el archivo y se guarda en el *a*/
 	n = 500000;
 	rFile(&a, &n);
 	if(a == NULL) return 1;
 	printf("Numero de nums: %d \n", n);
 
+	/*Imprime un menu para seleccionar el metodo de ordenamiento*/
 	puts("Elija un metodo de ordenamiento:");
 	puts("0. Burbuja.");
 	puts("1. Insercion.");
@@ -134,10 +137,11 @@ int main(){
         default:
             puts("Opcion no valida");
     }
-
+    /*Recoje el tiempo que tarda la cpu en ejecutarse y el tiempo real*/
     t_cpu = ((double) (f_cpu-i_cpu))/CLOCKS_PER_SEC;
     t_real = (f_real.tv_sec - i_real.tv_sec) + (f_real.tv_usec - i_real.tv_usec) / 1000000.0;
 
+	//Despliega los tiempos de la CPU y Real.
     printf("CPU (Algoritmo): %f s.\n", t_cpu);
     printf("Real (Algoritmo): %f s.\n", t_real);
 
@@ -145,6 +149,7 @@ int main(){
 	return 0;
 }
 
+//Recibe un apuntador de enteros y la longitud de dicho arreglo para desplegarlo en pantalla.
 void impA(int *a, int m){
     int i;
     for(i = 0; i < m; i++){
@@ -153,6 +158,8 @@ void impA(int *a, int m){
     puts("\n");
 }
 
+/* Recibe un apuntador sencillo de enteros y un doble apuntador, guarda los elementos que se 
+encuentren en "numeros10millones.txt" y los guarda en  el doble apuntador. */
 void rFile(int **a, int *n){
     FILE *file = fopen("numeros10millones.txt", "r");
     int j, t = 0;
@@ -168,6 +175,10 @@ void rFile(int **a, int *n){
     fclose(file);
 }
 
+
+/* Metodo de ordenamiento, recibe un arreglo dinamico y el tamaño de dicho arreglo.
+metodo que va comparando dos de los elementos del arreglo, si el izquierdo es mayor que el
+derecho los intercambia de lugar.*/
 void bubble(int *a, int n){
     int i, j, t;
     for(i = 1; i < n; i++){
@@ -181,6 +192,9 @@ void bubble(int *a, int n){
     }
 }
 
+/* Metodo de ordenamiento, recibe un arreglo dinamico y el tamaño de dicho arreglo.
+metodo que recorre todo el arreglo y acomoda cada elemento, dependiendo de los ya ordenados
+desplaza a la derecha de ser necesario*/
 void insertion(int *a, int n) {
     int i, j, temp;
     for (i = 0; i < n; i++) {
@@ -194,6 +208,10 @@ void insertion(int *a, int n) {
     }
 }
 
+
+/* Metodo de ordenamiento, recibe un arreglo dinamico y el tamaño de dicho arreglo.
+metodo que recorre todo el arreglo hasta encontrar el mas pequeño y lo intercambia con la primera posicion
+luego */
 void selection(int *a, int n){
     int i, j, p, t;
     for(i = 0; i < n-1; i++){
@@ -209,6 +227,9 @@ void selection(int *a, int n){
     }
 }
 
+/* Metodo de ordenamiento, recibe un arreglo dinamico y el tamaño de dicho arreglo.
+metodo que funciona similar al selection, sin embargo, primero define una distancia en la que aplica
+el metodo de ordenamiento para despues pasar con distancias mas cortos*/
 void shell(int *a, int s){
     int gap, i;
     for (gap = s / 2; gap > 0; gap /= 2) {
@@ -223,6 +244,9 @@ void shell(int *a, int s){
     }
 }
 
+/* Metodo de ordenamiento, recibe un arreglo dinamico y el tamaño de dicho arreglo.
+metodo que inserta todos los elementos de la lista en un árbol binario de búsqueda, 
+luego organiza los elementos de manera ordenada al seguir las reglas del árbol.*/
 void tree(int *a, int n){
 	int i;
 	Arbol arbolito = NULL;
@@ -239,6 +263,10 @@ void tree(int *a, int n){
 	destruirArbol(&arbolito);
 }
 
+/* Metodo de ordenamiento, recibe un arreglo dinamico y el tamaño de dicho arreglo.
+metodo que divide el arreglo de dos de manera recursiva hasta tener el intervalo mas pequeño
+e ir organizando desde los intervalos mas pequeños hasta los mas grandes, todo esto tomando
+desde un principio un pivote*/
 void quick(int *a, int m, int n){
     if(m<n){
         int piv;
@@ -250,6 +278,9 @@ void quick(int *a, int m, int n){
     }
 }
 
+
+/*Define la posicion del pivote, al recibir un arreglo dinamico, la primera y ultima posicion
+desde la que se busca encontrar el pivote */
 int pivot(int *a, int m, int n){
 	int p = a[n], i, j = m-1;
 
@@ -265,6 +296,9 @@ int pivot(int *a, int m, int n){
 	return j;
 }
 
+
+/*Recibe un arreglo dinamico y dos posiciones, de las cuales intercambia los elementos que
+se encuentren en respectivas posiciones*/
 void swap(int *a, int i, int j){
     int t;
     t = a[i];
@@ -274,6 +308,8 @@ void swap(int *a, int i, int j){
 
 //============================ARBOL V.Mini============================
 
+
+/*Crea un nodo declarando sus variables como nulas.*/
 int crearNodo(Nodo *n){
 	Nodo m = NULL;
 
@@ -291,6 +327,7 @@ int crearNodo(Nodo *n){
 	return 1;
 }
 
+/*Libera la memoria del nodo y posteriormente lo borra.*/
 int destruirNodo(Nodo *n){
 	Nodo aux = NULL;
 
@@ -311,6 +348,8 @@ int destruirNodo(Nodo *n){
 	return 1;
 }
 
+/*Recibe un nodo y un elemento, dentro del Nodo modifica
+su elemento pr el recibido*/
 int escribirElemento(Nodo n, int e){
 	if(n == NULL)
 	  return 0;
@@ -320,6 +359,9 @@ int escribirElemento(Nodo n, int e){
 	return 1;
 }
 
+
+/*Recibe un nodo y una direccin de memoria de un elemento
+en el proceso la direccion de memoria recibe la del elemento del nodo*/
 int leerElemento(Nodo n, int *e){
 	if(n == NULL)
 	  return 0;
@@ -329,6 +371,8 @@ int leerElemento(Nodo n, int *e){
 	return 1;
 }
 
+/*Recibe la direccion de memoria de un arbol, a partir de la cual guarda espacio
+donde se almacenara el arbol*/
 int crearArbol(Arbol *b){
 	Arbol a = NULL;
 
@@ -346,6 +390,8 @@ int crearArbol(Arbol *b){
 	return 0;
 }
 
+/*Recibe la direccion de memoria de un arbol del cual libera el espacio de memoria,
+primero liberando la de tdos los nodos del arbol*/
 void destruirArbol(Arbol *b){
 	Arbol a = NULL;
 	int sw = 0;
@@ -370,6 +416,8 @@ void destruirArbol(Arbol *b){
 
 }
 
+/*Recibe un nodo denominad cm central, a partir del cual comienza a liberar las conexiones
+de ambos lados del nodo, para posteriormente destruir el nodo central*/
 void destruirNodosRecursivamente(Nodo central){
 	Nodo izq = NULL, der = NULL;
 
@@ -393,6 +441,9 @@ void destruirNodosRecursivamente(Nodo central){
 		destruirNodo(&central);
 }
 
+
+/*Recibe un elemento y un arbol, añade el elemento dentro de un nodo del arbol ademas de declararlo
+como raiz si es el primer nodo en ser añadido y aumenta la cantidad registrada de nodos que tiene el arbol*/
 int insertarElemento(Arbol a, int e){
 	Nodo nuevo= NULL;
 
@@ -410,6 +461,8 @@ int insertarElemento(Arbol a, int e){
 	return 1;
 }
 
+/*Recibe un nodo central y un entero, si el entero es un numero menor a la cantidad de elementos entonces 
+se llama revursivamente para hacer un enlace por la izquierda, de ser mayor lo hace por la derecha*/
 Nodo insertarElementoRecursivo(Nodo central, int e){
 	Nodo nuevo = NULL;
 	Nodo izq = NULL, der = NULL;
@@ -437,6 +490,9 @@ Nodo insertarElementoRecursivo(Nodo central, int e){
 	return nuevo;
 }
 
+/*Recibe un arbol y la direccion de memoria de un entero, llama a otra funcion para comenzar
+a recorrer los nodos a partir desde la raiz, enviando la ultima y primera posicion de las que se
+quiere recorrer el arbol*/
 int recorrerArbolEnOrden(Arbol a, int *arr){
 	if(a == NULL)
 		return 0;
@@ -450,6 +506,8 @@ int recorrerArbolEnOrden(Arbol a, int *arr){
 	return 1;
 }
 
+/*Recibe un nodo y dos direcciones de memoria, se llama a si misma para recorrer los nodos por la izquierda
+y por la derecha del nodo que recibio.*/
 void recorrerNodosEnOrden(Nodo central, int *a, int *i){
 	int dato=0;
 
