@@ -120,8 +120,29 @@ int sumArr(int *arr, int m, int n){
     return sum;
 }
 
+/*Esta funcion de conteo de inversiones es utilizando el metodo directo, en esta se utilizan dos fors anidados
+el primer for controlara de izquierda a derecha el primer elemento que se use para una comparacion para saber
+si se aumenta las inversiones, el segundo for manejara el segundo elemento para la misma comparacion
+El primer for se detiene cuando el primer elemento de la comparacion llegue a la misma posicion que el ultimo
+pues ya no habria elementos mas adelante para comparar, mientras el segundo for tambien se detiene cuando alcanza al ultimo
+elemento del arreglo*/
+int inversionConteo(int *arr, int n)
+{
+	int conteo = 0;
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
+		{
+			if (arr[i] > arr[j]) {
+				conteo++;
+			}
+		}
+	}
+	return conteo;
+}
 
-/*Funcion que cuenta las inversiones dentro de un arreglo*/
+
+/*Funcion generando utilizando el metodo DyV que cuenta las inversiones dentro de un arreglo*/
 int inverDiv(int arr[], int n, int i, int j) {
     /*Caso baso en el que el parametro i es la penultima posicion para comparar todos los pares
     de numeros, la i señalara el primer numero del par de elementos que compara cada vez que quiere saber si ocurrira
