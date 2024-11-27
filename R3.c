@@ -1,10 +1,10 @@
 /*
-T�tulo: Divide y Venceras
-Descripci�n: Soluciones para los problemas de subarreglo de suma maxima, multiplicacion de matrices y conteo de inversiones
+Título: Divide y Venceras
+Descripción: Soluciones para los problemas de subarreglo de suma maxima, multiplicacion de matrices y conteo de inversiones
              por metodo directo y la metodologia DyV
 Fecha: 26/11/2024
-U. modificaci�n: 26/11/2024
-Versi�n: 1
+U. modificación: 26/11/2024
+Versión: 1
 Autor: Araujo, K. Martinez, A. & Zarate, L.
 */
 
@@ -31,7 +31,7 @@ int main(){
         printf("%d] \n", a[fin]);
         puts("========================================================");
         puts("=================Conteo de inversiones==================");
-
+        printf("\nEl conteo de inversiones es de %d \n", inverDiv(a, n,0,1));
 
         free(a);
     }else{
@@ -43,7 +43,7 @@ int main(){
 }
 
 /*Esta funcion crea los arreglos o matrices que se van a utilizar. Recibe 4 apuntadores: el primero corresponde
-a un arreglo unidimensional, los siguientes 2 a una matriz de nxn y el ultimo es el tama�o del arreglo o las matrices
+a un arreglo unidimensional, los siguientes 2 a una matriz de nxn y el ultimo es el tamaño del arreglo o las matrices
 */
 int sel(int **a, int ***m1, int ***m2, int *n){
     int s = 0;
@@ -69,7 +69,7 @@ int sel(int **a, int ***m1, int ***m2, int *n){
 }
 
 /*Esta funcion busca el subarreglo de suma maxima por metodo directo. Recibe como primer parametro un arreglo como apuntador,
-el tama�o del arreglo, un apuntador que corresponde a la suma max y dos apuntadores que corresponden
+el tamaño del arreglo, un apuntador que corresponde a la suma max y dos apuntadores que corresponden
 a los indices del subarreglo que contiene la suma max.
 */
 void maxSumMD(int *a, int tam, int *sum, int *ini, int *fin) {
@@ -118,4 +118,32 @@ int sumArr(int *arr, int m, int n){
         sum += arr[i];
     }
     return sum;
+}
+
+
+/*Funcion que cuenta las inversiones dentro de un arreglo*/
+int inverDiv(int arr[], int n, int i, int j) {
+    /*Caso baso en el que el parametro i es la penultima posicion para comparar todos los pares
+    de numeros, la i señalara el primer numero del par de elementos que compara cada vez que quiere saber si ocurrira
+    una inversion*/
+    if (i == n - 1) {
+        return 0;
+    }
+
+    /*El valor j controlara el segundo numero que compara, cuando este segundo numero alcance la ultima posicion
+    entonces movera el primer numero y tambien declarara el segundo numero que comparara*/
+    if (j == n) {
+        return inverDiv(arr, n, i + 1, i + 2);
+    }
+
+    /*Comparacion entre dos posiciones, se le sumara conteo a la recursion, si el de la izquierda es mayor al de la derecha
+    entonces si sumara una inversion*/
+    int conteo;
+    if(arr[i] > arr[j])
+     conteo = 1;
+    else
+     conteo = 0;
+
+    /*Llamada recursiva para seguir recorriendo todos los valores del segundo elemento que se usa para comparar*/
+    return conteo + inverDiv(arr, n, i, j + 1);
 }
