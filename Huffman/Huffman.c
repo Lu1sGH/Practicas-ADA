@@ -1,77 +1,113 @@
+/*
+Título: Algoritmos de ordenamiento
+Descripción: Programa que codifica y decodifica un archivo usando el algoritmo de Huffman.
+Fecha: 12/01/2025
+U. modificación: -
+Versión: 1
+Autor: Araujo, K. Martinez, A. & Zarate, L.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
 
-    /*
-    cpy() --solo use esta parte para probar algo lkdkajsd
-    char *ori = "ola.jpg";
-    char *dest = "ola2.jpg";
-
-    FILE *origen = abrir(ori, 1);
-    FILE *destino = abrir(dest, 0);
-
-    cpy(origen, destino);
-
-    return 0;
-
-    --EJEMPLO DE LECTURA DE dat
-    arcO = abrir(nDest, 1);
-    char *bits;
-    extraerBits(arcO, &bits, &tam);
-    for(int z = 0; z < tam; z++){
-        printf("%d", bits[z]);
-    }
-    */
-
 //============================ARBOL V.Mini============================
 
 typedef struct nodo{
-    int n;
-    int tRec;
-    char c;
-    char *rec;
+    int n; //Frecuencia del caracter
+    int tRec; //Tamaño del codigo de Huffman
+    char c; //Caracter
+    char *rec; //Codigo de Huffman
 	struct nodo *enlaceDer;
 	struct nodo *enlaceIzq;
 }t_nodo, *Nodo;
 
-int crearNodo(Nodo *);
-int destruirNodo(Nodo *);
-int escribirElemento(Nodo, int, char);
+int crearNodo(Nodo *); //Crea un nodo y lo inicializa
+int destruirNodo(Nodo *); //Destruye un nodo
+int escribirElemento(Nodo, int, char); //Escribe la frecuencia y el caracter en un nodo
 
 typedef struct arbol{
-    Nodo raiz;
-    int cantidad;
+    Nodo raiz; //Raiz del arbol
+    int cantidad; //Numero de nodos
 } t_arbol, *Arbol;
 
-int crearArbol(Arbol *);
-void destruirArbol(Arbol *);
-void destruirNodosRecursivamente(Nodo);
+int crearArbol(Arbol *); //Crea un arbol y lo inicializa
+void destruirArbol(Arbol *); //Destruye un arbol y sus nodos
+void destruirNodosRecursivamente(Nodo); //Destruye nodos recursivamente
 
-void recBin(Nodo, Nodo *, char *, int *, int);
+void recBin(Nodo, Nodo *, char *, int *, int); //Recorre todos los nodos del arbol
 
 //====================================================================
 
-FILE *abrir(char *, int);
-void *cpy(FILE *, FILE *);
-void destArrNodos(Nodo **, int);
-void contC(Nodo **, int *, FILE *);
-void quick(Nodo *, int, int);
-void swap(Nodo *a, int i, int j);
-void arbolHuffman(Arbol *, Nodo *, int);
-void codigoHuffman(Arbol, Nodo *, int);
-void mins(Nodo *, int *, int *, int);
-void extraerBits(FILE *, char **, int *);
-void codificar(char *, char *, char *);
-void datFreq(Nodo *arr, int tam, FILE *, FILE *, FILE *);
+FILE *abrir(char *, int); //Abre un archivo
+void destArrNodos(Nodo **, int); //Destruye un arreglo de nodos
+void contC(Nodo **, int *, FILE *); //Carga los caracteres que hay en un archivo y cuenta su frecuencia
+void quick(Nodo *, int, int); //Quick Sort para ordenar los caracteres por su frecuencia
+void swap(Nodo *a, int i, int j); //Funcion auxiliar de quick
+void arbolHuffman(Arbol *, Nodo *, int); //Construye el arbol de Huffman a partir de la lista de nodos
+void codigoHuffman(Arbol, Nodo *, int); //Crea el codigo de Huffman recorriendo el arbol
+void mins(Nodo *, int *, int *, int); //Encuentra el nodo con la minima frecuencia en un arr de Nodos
+void extraerBits(FILE *, char **, int *); //Extrae los bits de un .dat
+void codificar(char *, char *, char *); //Funcion que agrupa todas las funciones para codificar
+void datFreq(Nodo *arr, int tam, FILE *, FILE *, FILE *); //Escribe el archivo .dat y el .txt con la tabla de freq
+void decodificar(char *, char *, char *); //Funcion que agrupa todas las funciones para decodificar
+void obtenerFreq(Nodo **, int *,FILE *); //Obtiene la informacion del .dat y de la tabla de freq
+void copiaCadena(char codigo[256],int,char *); //Copia una cadena
+void capConsola(char [100]); //Captura un str de la consola
 
 int main(){
-    char *origen = "ola.txt";
-    char *destino = "Codificacion.dat";
+    char origen[100] = {0};
+    char destino[100] = {0};
+    char *codigo = "Codificacion.dat";
     char *tablaFrecuencia = "Frecuencias.txt";
+    int op = 0;
 
-    codificar(origen, destino, tablaFrecuencia);
+    printf("%cQu%c desea hacer?\n 1. Codificar un archivo.\n 2. Decodificar un archivo.\n 3. Las dos opciones anteriores.\n", 168, 130);
+    scanf("%d", &op);
+    while (getchar() != '\n');
+
+    switch(op){
+        case 1:
+            printf("Escriba el nombre del archivo de entrada y su extension.\nEj: ola.txt\n");
+            capConsola(origen);
+
+            codificar(origen, codigo, tablaFrecuencia);
+            break;
+        case 2:
+            printf("Escriba el nombre del archivo de salida y su extension.\nEj: ola.txt\n");
+            capConsola(destino);
+
+            decodificar(codigo, tablaFrecuencia, destino);
+            break;
+        case 3:
+            printf("Escriba el nombre del archivo de entrada y su extension.\nEj: entrada.txt\n");
+            capConsola(origen);
+            printf("Escriba el nombre del archivo de salida y su extension.\nEj: salida.txt\n");
+            capConsola(destino);
+
+            if(strcmp(origen, destino)){
+                codificar(origen, codigo, tablaFrecuencia);
+                decodificar(codigo, tablaFrecuencia, destino);
+            }else{
+                puts("El nombre de la entrada no puede ser igual que el de la salida.");
+            }
+            break;
+        default:
+            puts("No existe la opcion.");
+    }
     return 0;
+}
+
+void capConsola(char arr[100]){
+    if (fgets(arr, 100, stdin) != NULL) {
+        size_t len = strlen(arr);
+        if (len > 0 && arr[len - 1] == '\n') {
+            arr[len - 1] = '\0';
+        }
+    } else {
+        printf("Error al leer la entrada.\n");
+    }
 }
 
 void codificar(char *nOrg, char *nDest, char *nFreq){
@@ -134,8 +170,71 @@ void codificar(char *nOrg, char *nDest, char *nFreq){
 
     t_C = (f_C.tv_sec - i_C.tv_sec) + (f_C.tv_usec - i_C.tv_usec) / 1000000.0;
     t_H = (f_H.tv_sec - i_H.tv_sec) + (f_H.tv_usec - i_H.tv_usec) / 1000000.0;
-    printf("Tiempo total de codificacion: %f\nTiempo total del algoritmo: %f\n", t_C, t_H);
+    printf("Tiempo total de codificacion: %f\nTiempo total del algoritmo de Huffman: %f\n", t_C, t_H);
 }
+
+void decodificar(char *bits, char *frecuencias, char *salida){
+    Nodo *arr; //arreglo de Nodos con el codigo y caracter ascii al que corresponde
+    char *cadenaBits; //el arreglo en que se obtienen los bits
+    int nBits, size, tamNodo, nActual=0,conde=0, binario, j=0; //nBits es la cantidad de bits en la cadena, size es el tamaño que deberá tener el arreglo de Nodos
+    FILE *aBits = abrir(bits, 1); //se abre el archivo .dat con los bits
+    FILE *aFrecuencias = abrir(frecuencias, 4); //se abre el .txt que contiene las frecuencias
+    FILE *aSalida = abrir(salida, 2); //se abre el archivo en que se almacenara la decodificacion
+    struct timeval i_C, f_C, i_H, f_H;
+    double t_C, t_H;
+
+    gettimeofday(&i_C, NULL);
+
+    extraerBits(aBits, &cadenaBits, &nBits );
+
+    //alocando un arreglo en que se guardan los nodos con los caracteres y codigos
+    arr = (Nodo *)malloc(256*sizeof(t_nodo));
+    obtenerFreq(&arr, &size,aFrecuencias);
+
+    gettimeofday(&i_H, NULL);
+    for(int i=0; i<nBits; i++){
+        tamNodo= arr[nActual]->tRec;
+
+        //printf("%c", arr[nActual]->rec[conde]);
+
+        if(arr[nActual]->rec[conde]==48){
+            binario = 0;
+        } else{
+            binario =1;
+        }
+
+        if(cadenaBits[i]==binario){ //comprueba que los bits coincidan
+            if((conde+1) == tamNodo){
+                fprintf(aSalida, "%c", arr[nActual]->c);
+
+                if(i==nBits-1) i = nBits + 1; //otra condicion para evitar errores
+                nActual=0;
+                conde=0;
+            }
+            else{
+                conde++;
+            }
+         } else{
+            nActual++;
+            i-=(conde+1);
+            conde=0;
+        }
+    }
+
+    gettimeofday(&f_H, NULL);
+
+    destArrNodos(&arr, size);
+    fclose(aBits);
+    fclose(aFrecuencias);
+    fclose(aSalida);
+
+    gettimeofday(&f_C, NULL);
+    t_C = (f_C.tv_sec - i_C.tv_sec) + (f_C.tv_usec - i_C.tv_usec) / 1000000.0;
+    t_H = (f_H.tv_sec - i_H.tv_sec) + (f_H.tv_usec - i_H.tv_usec) / 1000000.0;
+    printf("Tiempo total de decodificacion: %f\nTiempo total de Huffman't: %f\n", t_C, t_H);
+}
+
+//============================Codificacion============================
 
 void extraerBits(FILE *arc, char **bits, int *totalBits){
     unsigned char byte;
@@ -164,8 +263,6 @@ void extraerBits(FILE *arc, char **bits, int *totalBits){
 
     fseek(arc, -1, SEEK_END);
     fread(&byte, sizeof(unsigned char), 1, arc);
-    printf("Bits basura: %d\n", byte);
-
     *totalBits = bitIndex-8-byte;
 }
 
@@ -174,10 +271,17 @@ void datFreq(Nodo *arr, int tam, FILE *org, FILE *dest, FILE *freq){
     int ascii[256] = {0};
 
     for(j = 0; j < tam; j++){
-        fprintf(freq, "%d\t%c\t%d\t", arr[j]->c, arr[j]->c, arr[j]->n);
+        fprintf(freq, "%d\t", arr[j]->c);
         for(int l = 0; l < arr[j]->tRec; l++)
             fprintf(freq, "%d", arr[j]->rec[l]);
-        fprintf(freq, "\n");
+        fprintf(freq, "\t");
+        if(((unsigned char) arr[j]->c) < 32 || 126 < ((unsigned char) arr[j]->c)){
+            fprintf(freq, "%d\t%s\n", arr[j]->n, "[No_imprimible]");
+        }else if(arr[j]->c == 32){
+            fprintf(freq, "%d\t%s\n", arr[j]->n, "[Espacio]");
+        }else{
+            fprintf(freq, "%d\t%c\n", arr[j]->n, arr[j]->c);
+        }
 
         ascii[(unsigned char)(arr[j]->c)] = j;
     }
@@ -364,11 +468,61 @@ FILE *abrir(char *nom, int t){
     return arch;
 }
 
-void *cpy(FILE *origen, FILE *destino){
-    char b[4096];
-    size_t tR;
-    while (tR = fread(b, 1, sizeof(b), origen)) {
-        fwrite(b, 1, tR, destino);
+//===========================Decodificacion===========================
+
+void obtenerFreq(Nodo **arr, int *size, FILE *fuente){
+    if(fuente==NULL){
+        printf("No se proporcionó un archivo o está vacío");
+        return;
+    }
+
+    if(arr==NULL){
+        printf("(!) Hubo un problema con el arreglo de nodos");
+        return;
+    }
+
+    int i, ascii, frecuencia, control=1, count=0, tam;
+    char caracter[20], codigo[256];
+    char *auxCad;
+    Nodo *arrAux;
+    Nodo aux;
+
+    while(control !=0){
+        if(fscanf(fuente, "%d\t%s\t%d\t%s", &ascii, &codigo, &frecuencia, &caracter)>=3){
+            tam = strlen(codigo);
+
+            if(crearNodo(&aux)){
+                aux->rec = (char *) malloc(tam*sizeof(char));
+
+                copiaCadena(codigo, tam, aux->rec);
+
+                aux->tRec = tam;
+                aux->c = ascii;
+                aux->n = frecuencia;
+
+                (*arr)[count] = aux;
+            }
+            count++;
+
+            for(i=0; i<256; i++){
+                codigo[i]=0;
+            }
+        }
+        else{
+            control=0;
+        }
+    }
+
+    arrAux = (Nodo *)realloc(*arr, count*sizeof(t_nodo));
+    *arr = arrAux;
+    *size = count;
+}
+
+void copiaCadena(char codigo[256], int n, char *aux){
+    int i;
+
+    for(i=0; i<n; i++){
+        aux[i] = codigo[i];
     }
 }
 
