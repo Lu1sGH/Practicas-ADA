@@ -1,9 +1,9 @@
 /*
-TÌtulo: Algoritmos de ordenamiento
-DescripciÛn: Programa que codifica y decodifica un archivo usando el algoritmo de Huffman.
+T√≠tulo: C√≥digo de Huffman.
+Descripci√≥n: Programa que codifica y decodifica un archivo usando el algoritmo de Huffman.
 Fecha: 12/01/2025
-U. modificaciÛn: -
-VersiÛn: 1
+U. modificaci√≥n: -
+Versi√≥n: 1
 Autor: Araujo, K. Martinez, A. & Zarate, L.
 */
 
@@ -16,7 +16,7 @@ Autor: Araujo, K. Martinez, A. & Zarate, L.
 
 typedef struct nodo{
     int n; //Frecuencia del caracter
-    int tRec; //TamaÒo del codigo de Huffman
+    int tRec; //Tama√±o del codigo de Huffman
     char c; //Caracter
     char *rec; //Codigo de Huffman
 	struct nodo *enlaceDer;
@@ -40,21 +40,21 @@ void recBin(Nodo, Nodo *, char *, int *, int); //Recorre todos los nodos del arb
 
 //====================================================================
 
-FILE *abrir(char *, int); //Abre un archivo
-void destArrNodos(Nodo **, int); //Destruye un arreglo de nodos
-void contC(Nodo **, int *, FILE *); //Carga los caracteres que hay en un archivo y cuenta su frecuencia
-void quick(Nodo *, int, int); //Quick Sort para ordenar los caracteres por su frecuencia
-void swap(Nodo *a, int i, int j); //Funcion auxiliar de quick
-void arbolHuffman(Arbol *, Nodo *, int); //Construye el arbol de Huffman a partir de la lista de nodos
-void codigoHuffman(Arbol, Nodo *, int); //Crea el codigo de Huffman recorriendo el arbol
-void mins(Nodo *, int *, int *, int); //Encuentra el nodo con la minima frecuencia en un arr de Nodos
-void extraerBits(FILE *, char **, int *); //Extrae los bits de un .dat
-void codificar(char *, char *, char *); //Funcion que agrupa todas las funciones para codificar
-void datFreq(Nodo *arr, int tam, FILE *, FILE *, FILE *); //Escribe el archivo .dat y el .txt con la tabla de freq
-void decodificar(char *, char *, char *); //Funcion que agrupa todas las funciones para decodificar
-void obtenerFreq(Nodo **, int *,FILE *); //Obtiene la informacion del .dat y de la tabla de freq
-void copiaCadena(char codigo[256],int,char *); //Copia una cadena
-void capConsola(char [100]); //Captura un str de la consola
+FILE *abrir(char *, int); //Abre un archivo y lo retorna. Lo puede abrir para escritura o lectura normal o en binario.
+void destArrNodos(Nodo **, int); //Destruye un arreglo de nodos. No retorna nada pero deja vac√≠a la lista de nodos.
+void contC(Nodo **, int *, FILE *); //Carga los caracteres que hay en un archivo y cuenta su frecuencia. Modifica el arreglo de nodos.
+void quick(Nodo *, int, int); //Quick Sort para ordenar los caracteres por su frecuencia. Retorna el arreglo de nodos ordenados.
+void swap(Nodo *a, int i, int j); //Funcion auxiliar de quick. Invierte la posici√≥n de dos nodos en un arreglo.
+void arbolHuffman(Arbol *, Nodo *, int); //Construye el arbol de Huffman a partir de la lista de nodos. Regresa un arbol.
+void codigoHuffman(Arbol, Nodo *, int); //Crea el codigo de Huffman recorriendo el arbol. No retorna nada pero modifica a los nodos.
+void mins(Nodo *, int *, int *, int); //Encuentra el nodo con la minima frecuencia en un arr de Nodos. Retorna el indice de los nodos menores.
+void extraerBits(FILE *, char **, int *); //Extrae los bits de un .dat. Retorna un arreglo de chars.
+void codificar(char *, char *, char *); //Funcion que agrupa todas las funciones para codificar. No tiene retorno.
+void datFreq(Nodo *arr, int tam, FILE *, FILE *, FILE *); //Escribe el archivo .dat y el .txt con la tabla de freq. No tiene retorno.
+void decodificar(char *, char *, char *); //Funcion que agrupa todas las funciones para decodificar. No tiene retorno.
+void obtenerFreq(Nodo **, int *,FILE *); //Obtiene la informacion del .dat y de la tabla de freq. Retorna el arreglo de nodos modificado.
+void copiaCadena(char codigo[256],int,char *); //Copia una cadena.
+void capConsola(char [100]); //Captura un str de la consola.
 
 int main(){
     char origen[100] = {0};
@@ -88,6 +88,7 @@ int main(){
 
             if(strcmp(origen, destino)){
                 codificar(origen, codigo, tablaFrecuencia);
+                puts("========================================");
                 decodificar(codigo, tablaFrecuencia, destino);
             }else{
                 puts("El nombre de la entrada no puede ser igual que el de la salida.");
@@ -176,7 +177,7 @@ void codificar(char *nOrg, char *nDest, char *nFreq){
 void decodificar(char *bits, char *frecuencias, char *salida){
     Nodo *arr; //arreglo de Nodos con el codigo y caracter ascii al que corresponde
     char *cadenaBits; //el arreglo en que se obtienen los bits
-    int nBits, size, tamNodo, nActual=0,conde=0, binario, j=0; //nBits es la cantidad de bits en la cadena, size es el tamaÒo que deber· tener el arreglo de Nodos
+    int nBits, size, tamNodo, nActual=0,conde=0, binario, j=0; //nBits es la cantidad de bits en la cadena, size es el tama√±o que deber√° tener el arreglo de Nodos
     FILE *aBits = abrir(bits, 1); //se abre el archivo .dat con los bits
     FILE *aFrecuencias = abrir(frecuencias, 4); //se abre el .txt que contiene las frecuencias
     FILE *aSalida = abrir(salida, 2); //se abre el archivo en que se almacenara la decodificacion
@@ -472,7 +473,7 @@ FILE *abrir(char *nom, int t){
 
 void obtenerFreq(Nodo **arr, int *size, FILE *fuente){
     if(fuente==NULL){
-        printf("No se proporcionÛ un archivo o est· vacÌo");
+        printf("No se proporcion√≥ un archivo o est√° vac√≠o");
         return;
     }
 
